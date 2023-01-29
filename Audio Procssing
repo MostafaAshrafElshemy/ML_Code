@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import librosa
+print(librosa.__version__)
+
+
+# In[2]:
+
+
+y ,sr =librosa.load(librosa.util.example_audio_file())
+print(len(y) , sr)
+
+
+# In[ ]:
+
+
+import matplotlib.pyplot as plt
+import matplotlib.style as ms
+ms.use('seaborn-muted')
+get_ipython().run_line_magic('matplotlib', 'nbagg')
+from IPython.display import Audio
+
+
+# In[ ]:
+
+
+import librosa.display
+
+
+# In[ ]:
+
+
+plt.figure()
+librosa.display.waveplot(y=y , sr=sr)
+
+
+# In[ ]:
+
+
+from IPython.display import Audio
+Audio("khawater.mp3")
+
+
+# In[ ]:
+
+
+import pyttsx3
+engine = pyttsx3.init()
+engine.setProperty('rate' , 200)
+voices= engine.getProperty('voices')
+engine.setProperty('voices' , voices[1].id)
+engine.say(input())
+engine.runAndWait()
+
+
+# In[ ]:
+
+
+from gtts import gTTS
+import os 
+
+mytext = "السلام عليكم"
+language = 'ar'
+
+myobj = gTTS(text=mytext , lang=language , slow=False)
+myobj.save("welcome.mp3")
+Audio("welcome.mp3")
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
