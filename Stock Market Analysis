@@ -1,0 +1,196 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[16]:
+
+
+import pandas as pd 
+import yfinance as yf 
+import datetime 
+from datetime import date, timedelta 
+import plotly.graph_objects as go 
+import plotly.express as px
+
+
+# In[17]:
+
+
+today = date.today() 
+d1 = today.strftime("%Y-%m-%d") 
+end_date = d1 
+d2 = date.today() - timedelta(days=365) 
+d2 = d2.strftime("%Y-%m-%d") 
+start_date = d2
+
+
+# In[18]:
+
+
+data = yf.download('GOOG', start=start_date, end=end_date, progress=False) 
+data["Date"] = data.index
+
+
+# In[13]:
+
+
+data = data[["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]] 
+data.reset_index(drop=True, inplace=True) 
+print(data)
+
+
+# In[19]:
+
+
+figure = go.Figure(data=[go.Candlestick(x=data["Date"], open=data["Open"],high=data["High"], low=data["Low"],close=data["Close"])])
+
+
+# In[20]:
+
+
+figure.update_layout(title = "Google Stock Price Analysis", xaxis_rangeslider_visible=False) 
+figure.show()
+
+
+# In[21]:
+
+
+figure = px.bar(data, x = "Date", y= "Close") 
+figure.show()
+
+
+# In[6]:
+
+
+figure = px.line(data, x='Date', y='Close', title='Stock Market Analysis with Rangeslider')
+figure.update_xaxes(rangeslider_visible=True) 
+figure.show()
+
+
+# In[ ]:
+
+
+figure = px.line(data, x="Date", y="Close",title='Stock Market Analysis with Time Period Selectors')
+figure.update_xaxes(rangeselector=dict(buttons=list[{dict(count=1, label="1m", step="month", stepmode="backward")},dict{count=6, label="6m", step="month", stepmode="backward"},dict{count=3, label="3m", step="month", stepmode="backward"},dict{count=1, label="1y", step="year", stepmode="backward"},dict(step="all") ]))
+figure.show()
+
+
+# In[24]:
+
+
+figure = px.scatter(data, x="Date", y="Close", range_x=['2021-07-12', '2022-07-11'],title="Stock Market Analysis by Hiding Weekend Gaps")
+figure.update_xaxes(rangebreaks[=dict(bounds=["sat","sun"])
+
+
+# In[25]:
+
+
+import pandas as pd
+import yfinance as yf
+import datetime
+from datetime import date, timedelta
+today = date.today()
+
+d1 = today.strftime("%Y-%m-%d")
+end_date = d1
+d2 = date.today() - timedelta(days=365)
+d2 = d2.strftime("%Y-%m-%d")
+start_date = d2
+
+data = yf.download('GOOG', 
+                      start=start_date, 
+                      end=end_date, 
+                      progress=False)
+data["Date"] = data.index
+data = data[["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]]
+data.reset_index(drop=True, inplace=True)
+print(data.tail())
+
+
+# In[26]:
+
+
+data = data[["Date", "Close"]]
+print(data.head())
+
+
+# In[27]:
+
+
+import matplotlib.pyplot as plt
+plt.style.use('fivethirtyeight')
+plt.figure(figsize=(15, 10))
+plt.plot(data["Date"], data["Close"])
+
+
+# In[28]:
+
+
+from statsmodels.tsa.seasonal import seasonal_decompose
+#result = seasonal_decompose(data["Close"], model="multiplicative", freq = 30)
+fig = plt.figure()  
+#fig = result.plot()  
+fig.set_size_inches(15, 10)
+
+
+# In[29]:
+
+
+pd.plotting.autocorrelation_plot(data["Close"])
+
+
+# In[39]:
+
+
+from statsmodels.graphics.tsaplots import plot_pacf
+plot_pacf(data["Close"], lags = 100)
+
+
+# In[50]:
+
+
+p, d, q = 5, 1, 2
+
+from statsmodels.tsa.arima_model.ARIMA import ARIMA
+
+model = ARIMA(data["Close"], order=(p,d,q))  
+fitted = model.fit(disp=-1)  
+print(fitted.summary())
+
+
+# In[51]:
+
+
+predictions = fitted.predict()
+print(predictions)
+
+
+# In[ ]:
+
+
+import statsmodels.api as sm
+import warnings
+model=sm.tsa.statespace.SARIMAX(data["Close"], order=(p, d, q),seasonal_order=(p, d, q, 12))
+                                  
+model=model.fit()
+print(model.summary())
+
+
+# In[ ]:
+
+
+predictions = model.predict(len(data), len(data)+10)
+print(predictions)
+
+
+# In[ ]:
+
+
+data["Close"].plot(legend=True, label="Training Data", figsize=(15, 10))
+predictions.plot(legend=True, label="Predictions")
+
+
+# In[ ]:
+
+
+
+
