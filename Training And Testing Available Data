@@ -1,0 +1,175 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# <h2 style='color:purple' align='center'>Training And Testing Available Data</h2>
+
+# <p><b>We have a dataset containing prices of used BMW cars. We are going to analyze this dataset
+# and build a prediction function that can predict a price by taking mileage and age of the car
+# as input. We will use sklearn train_test_split method to split training and testing dataset</b></p>
+
+# In[1]:
+
+
+import pandas as pd
+df = pd.read_csv("carprices.csv")
+df
+
+
+# In[2]:
+
+
+import matplotlib.pyplot as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+
+# **Car Mileage Vs Sell Price ($)**
+
+# In[3]:
+
+
+plt.xlabel("miles")
+plt.ylabel("sell price")
+plt.title("price to mile age")
+plt.scatter(df['Mileage'],df['Sell Price($)'])
+
+
+# **Car Age Vs Sell Price ($)**
+
+# In[4]:
+
+
+plt.xlabel("age")
+plt.ylabel("sell price")
+plt.scatter(df['Age(yrs)'],df['Sell Price($)'])
+
+
+# In[5]:
+
+
+plt.xlabel("miles")
+plt.ylabel("age")
+plt.scatter(df['Mileage'],df['Age(yrs)'])
+
+
+# **Looking at above two scatter plots, using linear regression model makes sense as we can clearly see a linear relationship between our dependant (i.e. Sell Price) and independant variables (i.e. car age and car mileage)**
+
+# <p style='color:purple'><b>The approach we are going to use here is to split available data in two sets</b></p>
+#     <ol>
+#         <b>
+#         <li>Training: We will train our model on this dataset</li>
+#         <li>Testing: We will use this subset to make actual predictions using trained model</li>
+#         </b>
+#      </ol>
+# <p style='color:purple'><b>The reason we don't use same training set for testing is because our model has seen those samples before, using same samples for making predictions might give us wrong impression about accuracy of our model. It is like you ask same questions in exam paper as you tought the students in the class.
+# </b></p>
+
+# In[5]:
+
+
+X = df[['Mileage','Age(yrs)']]
+
+
+# In[6]:
+
+
+y = df['Sell Price($)']
+
+
+# In[ ]:
+
+
+x ==> features ( to be trained )
+x train 
+x test 
+y ==> result ( to be predicted )
+
+y train 
+y test 
+
+
+# In[11]:
+
+
+print(len(X))
+print(len(X_train))
+
+
+# In[7]:
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.8) 
+
+
+# In[8]:
+
+
+X_train
+
+
+# In[9]:
+
+
+X_test
+
+
+# In[10]:
+
+
+y_train
+
+
+# In[11]:
+
+
+y_test
+
+
+# **Lets run linear regression model now**
+
+# In[12]:
+
+
+from sklearn.linear_model import LinearRegression
+clf = LinearRegression()
+clf.fit(X_train, y_train)
+
+
+# In[13]:
+
+
+X_test
+
+
+# In[15]:
+
+
+clf.predict(X_test)
+
+
+# In[16]:
+
+
+y_test
+
+
+# In[17]:
+
+
+clf.score(X_train, y_train)
+
+
+# In[18]:
+
+
+clf.score(X_test, y_test)
+
+
+# **random_state argument**
+
+# In[35]:
+
+
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.3,random_state=10)
+X_test
+
